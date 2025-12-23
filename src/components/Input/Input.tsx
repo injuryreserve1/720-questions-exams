@@ -15,11 +15,12 @@ const Input = () => {
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         value.getDataBySearch(input);
+        setInput('')
     }
 
   return (
     <form className="form-input">
-      <input onChange={handleChange} id="search" className="nb-input default" type="search" placeholder="Напиши вопрос"/>
+      <input onChange={handleChange} id="search" value={input} className="nb-input default" type="search" placeholder="Напиши вопрос"/>
       <button onClick={handleClick} className="nb-button default">{`>`}</button>
     </form>
   );

@@ -34,7 +34,7 @@ const List = () => {
           </div>
         </div>
       ))}
-      {value.questionsLength > 10 && <Pagination/>}
+      {value.questionsLength >= 10 && <Pagination/>}
     </div>
   );
 };
