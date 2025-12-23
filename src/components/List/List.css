@@ -1,0 +1,7 @@
+.wrapper > * {
+    margin: 20px 0;
+}
+
+.myHeader {
+    font-size: clamp(1rem, 0.7rem, 2rem) !important;
+}

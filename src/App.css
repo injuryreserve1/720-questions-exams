@@ -1,0 +1,11 @@
+.main-wrapper {
+    min-width: 300px;
+    max-width: 1080px;
+    margin-left: 100px;
+}
+
+@media(max-width: 500px) {
+    .main-wrapper {
+        margin: 0 auto;
+    }
+}
