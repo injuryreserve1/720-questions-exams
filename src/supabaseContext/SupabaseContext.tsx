@@ -11,6 +11,7 @@ export interface Value {
     getRandomQuestion: () => Promise<void>
     getAllQuestion: () => Promise<void>
     state: DataItem[]
+    isLoading: boolean
 }
 
 const defaultValue: Value = {
@@ -18,6 +19,7 @@ const defaultValue: Value = {
     getRandomQuestion: async () => {},
     getAllQuestion: async () => {},
     state: [],
+    isLoading: false
 };
 
 export const SupabaseContext = createContext(defaultValue);

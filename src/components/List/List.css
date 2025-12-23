@@ -5,3 +5,18 @@
 .myHeader {
     font-size: clamp(1rem, 0.7rem, 2rem) !important;
 }
+
+.mySpinner {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.spoiler {
+    filter: blur(4px);
+    transition: 0.5s;
+}
+
+.spoiler:hover {
+    filter: blur(0)
+}
