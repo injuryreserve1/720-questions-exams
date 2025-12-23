@@ -12,10 +12,11 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
 );
 
-
 const SupabaseProvider = ({ children }: Props) => {
   const [dbData, setdbData] = useState<DataItem[]>([]);
+  const [page, setPage] = useState(1);
   const [isLoading, setLoading] = useState(false);
+  const [questionsLength, setQuestionsLength] = useState(0)
 
   async function getDataBySearch(input: string) {
     try {
@@ -36,9 +37,11 @@ const SupabaseProvider = ({ children }: Props) => {
   async function getRandomQuestion() {
     try {
       setLoading(true);
+
       const { count } = await supabase
         .from("mytable")
         .select("id", { count: "exact" });
+
       if (count) {
         const getRandomId = Math.floor(Math.random() * count + 1);
         const { data } = await supabase
@@ -48,6 +51,7 @@ const SupabaseProvider = ({ children }: Props) => {
           .single();
         setdbData([data] as DataItem[]);
       }
+
     } catch (err) {
       console.error("ошибка воверям getRandomQuestion", err);
     } finally {
@@ -55,11 +59,26 @@ const SupabaseProvider = ({ children }: Props) => {
     }
   }
 
-  async function getAllQuestion() {
+  async function getQuestions() {
     try {
       setLoading(true);
-      const { data } = await supabase.from("mytable").select("*");
+      console.log("pagepage", page);
+      const pageSize = 10;
+      const from = page * pageSize;
+      const to = from + pageSize - 1
+
+      const { data, count } = await supabase
+        .from("mytable")
+        .select("*", {count: 'exact'})
+        .order("id")
+        .range(from, to);
+
       setdbData(data as DataItem[]);
+      
+      if (count) {
+        setQuestionsLength(count)
+      }
+
     } catch (err) {
       console.error("ошибка воверям getAllQuestion", err);
     } finally {
@@ -70,9 +89,12 @@ const SupabaseProvider = ({ children }: Props) => {
   const value: Value = {
     getDataBySearch: getDataBySearch,
     getRandomQuestion: getRandomQuestion,
-    getAllQuestion: getAllQuestion,
+    getQuestions: getQuestions,
     state: dbData,
     isLoading: isLoading,
+    questionsLength: questionsLength,
+    page: page,
+    setPage: setPage
   };
 
   return <SupabaseContext value={value}>{children}</SupabaseContext>;

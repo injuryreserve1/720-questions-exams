@@ -3,6 +3,7 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import Markdown from "react-markdown";
 import "./List.css";
+import Pagination from "../Pagination/Pagination";
 
 const List = () => {
 
@@ -33,6 +34,7 @@ const List = () => {
           </div>
         </div>
       ))}
+      {value.questionsLength > 10 && <Pagination/>}
     </div>
   );
 };
