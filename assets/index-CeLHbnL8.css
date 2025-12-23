@@ -1,0 +1,1 @@
+.main-wrapper{min-width:300px;max-width:1080px;margin-left:100px}@media(max-width:500px){.main-wrapper{margin:0 auto}}.form-input{display:flex}.header{display:flex;gap:20px}@media(max-width:500px){.header{flex-direction:column;align-items:stretch}}.wrapper>*{margin:20px 0}.myHeader{font-size:clamp(1rem,.7rem,2rem)!important}
