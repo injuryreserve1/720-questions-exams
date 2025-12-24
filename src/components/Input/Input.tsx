@@ -1,26 +1,19 @@
 import "./Input.css"
 import { useSupabase } from "../../supabaseContext/useContext";
-import { useState } from "react";
-import type { ChangeEvent, MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 
 const Input = () => {
     const value = useSupabase();
-
-    const [input, setInput] = useState<string>('')
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setInput(e.target.value)
-    }
+    const [search, setSearch] = useState('')
 
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        value.getDataBySearch(input);
-        setInput('')
+        value.getQuestions(0, search);
     }
 
   return (
     <form className="form-input">
-      <input onChange={handleChange} id="search" value={input} className="nb-input default" type="search" placeholder="Напиши вопрос"/>
+      <input onChange={(e) => setSearch(e.target.value)} id="search" value={search} className="nb-input default" type="search" placeholder="Напиши вопрос"/>
       <button onClick={handleClick} className="nb-button default">{`>`}</button>
     </form>
   );

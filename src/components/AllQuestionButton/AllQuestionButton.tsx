@@ -4,8 +4,7 @@ const AllQuestionButton = () => {
     const value = useSupabase();
 
     const handleClick = () => {
-        value.setPage(1)
-        value.getQuestions()
+        value.getQuestions(0, "")
     }
 
     return (

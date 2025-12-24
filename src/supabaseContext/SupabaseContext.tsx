@@ -1,4 +1,4 @@
-import {createContext} from "react";
+import {createContext, type Dispatch, type SetStateAction } from "react";
 
 export interface DataItem {
     id: number | string;
@@ -7,25 +7,29 @@ export interface DataItem {
 }
 
 export interface Value {
-    getDataBySearch: (input: string) => Promise<void>
     getRandomQuestion: () => Promise<void>
-    getQuestions: () => Promise<void>
+    getQuestions: (page: number, query: string) => Promise<void>
+    setPage: Dispatch<SetStateAction<number>>,
+    setSearch: Dispatch<SetStateAction<string>>
     state: DataItem[]
     isLoading: boolean
     questionsLength: number
     page: number
-    setPage: React.Dispatch<React.SetStateAction<number>>
+    search: string
+
 }
 
 const defaultValue: Value = {
-    getDataBySearch: async (_: string) => {},
     getRandomQuestion: async () => {},
-    getQuestions: async () => {},
+    getQuestions: async (_: number, __: string) => {},
+    setPage: () => {},
+    setSearch: () => {}, 
     state: [],
     isLoading: false,
     questionsLength: 0,
     page: 1,
-    setPage: () => {} 
+    search: ""
 };
 
 export const SupabaseContext = createContext(defaultValue);
+SupabaseContext.displayName = "supabasecontext"

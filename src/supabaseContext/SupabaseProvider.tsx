@@ -16,50 +16,17 @@ const SupabaseProvider = ({ children }: Props) => {
   const [dbData, setdbData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setLoading] = useState(false);
+  const [search, setSearch] = useState("")
   const [questionsLength, setQuestionsLength] = useState(0)
-
-  const pageSize = 10;
-  const from = page * pageSize;
-  const to = from + pageSize - 1
-
-  async function getDataBySearch(input: string) {
-    try {
-      setLoading(true);
-      const { data, count } = await supabase
-        .from("mytable")
-        .select("*", {count: 'exact'})
-        .ilike("question", `%${input}%`)
-
-      if (count) {
-        setQuestionsLength(1)
-      }
-
-      setdbData(data as DataItem[]);
-    } catch (err) {
-      console.error("ошибка воверям getDataBySearch", err);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function getRandomQuestion() {
     try {
       setLoading(true);
 
-      const { count } = await supabase
-        .from("mytable")
-        .select("id", { count: "exact" });
-
-      if (count) {
-        const getRandomId = Math.floor(Math.random() * count + 1);
-        const { data } = await supabase
-          .from("mytable")
-          .select("*")
-          .eq("id", getRandomId)
-          .single();
-        setdbData([data] as DataItem[]);
-        setQuestionsLength(1)
-      }
+      const { data } = await supabase.rpc('get_random_question').single();
+      
+      setQuestionsLength([data].length)
+      setdbData([data] as DataItem[]);
 
     } catch (err) {
       console.error("ошибка воверям getRandomQuestion", err);
@@ -68,23 +35,31 @@ const SupabaseProvider = ({ children }: Props) => {
     }
   }
 
-  async function getQuestions() {
+  async function getQuestions(pageNumber: number, searchQuery: string) {
+    
+    const pageSize = 10;
+    const from = pageNumber * pageSize;
+    const to = from + pageSize - 1
+    
     try {
       setLoading(true);
-      console.log("pagepage", page);
+      setPage(pageNumber)
+      setSearch(searchQuery)
       
-
-      const { data, count } = await supabase
+      const { data, count, error } = await supabase
         .from("mytable")
         .select("*", {count: 'exact'})
         .order("id")
-        .range(from, to);
+        .range(from, to)
+        .ilike("question", `%${searchQuery}%`)
 
       setdbData(data as DataItem[]);
       
       if (count) {
         setQuestionsLength(count)
       }
+
+      console.log("error",error)
 
     } catch (err) {
       console.error("ошибка воверям getAllQuestion", err);
@@ -94,14 +69,15 @@ const SupabaseProvider = ({ children }: Props) => {
   }
 
   const value: Value = {
-    getDataBySearch: getDataBySearch,
     getRandomQuestion: getRandomQuestion,
     getQuestions: getQuestions,
     setPage: setPage,
+    setSearch: setSearch,
     state: dbData,
     isLoading: isLoading,
     questionsLength: questionsLength,
     page: page,
+    search: search,
   };
 
   return <SupabaseContext value={value}>{children}</SupabaseContext>;
