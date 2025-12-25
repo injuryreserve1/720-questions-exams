@@ -22,9 +22,13 @@ const SupabaseProvider = ({ children }: Props) => {
   async function getRandomQuestion() {
     try {
       setLoading(true);
-
-      const { data } = await supabase.rpc('get_random_question').single();
+      const { data,error } = await supabase.rpc('get_random_question').single();
       
+      if(error) {
+        setdbData([])
+        return
+      }
+
       setQuestionsLength([data].length)
       setdbData([data] as DataItem[]);
 
@@ -52,7 +56,12 @@ const SupabaseProvider = ({ children }: Props) => {
         .order("id")
         .range(from, to)
         .ilike("question", `%${searchQuery}%`)
-
+  
+      if(error) {
+        setdbData([])
+        return
+      }
+        
       setdbData(data as DataItem[]);
       
       if (count) {
